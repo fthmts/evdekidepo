@@ -1,747 +1,83 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mataş Depo Takip Programı</title>
-    <style>
-        :root {
-            --primary: #00CED1;
-            --primary-light: #E0FFFF;
-            --primary-dark: #008B8B;
-            --white: #FFFFFF;
-            --gray-light: #F5F5F5;
-            --gray: #DDDDDD;
-            --text: #333333;
-        }
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        
-        body {
-            background-color: var(--gray-light);
-            color: var(--text);
-        }
-        
-        .container {
-            display: flex;
-            min-height: 100vh;
-        }
-        
-        .sidebar {
-            width: 250px;
-            background-color: var(--white);
-            border-right: 1px solid var(--gray);
-            transition: all 0.3s;
-        }
-        
-        .main-content {
-            flex: 1;
-            padding: 20px;
-            overflow-y: auto;
-        }
-        
-        .header {
-            background-color: var(--primary);
-            color: var(--white);
-            padding: 15px 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-        
-        .logo {
-            font-size: 24px;
-            font-weight: bold;
-        }
-        
-        .menu {
-            list-style: none;
-            padding: 10px 0;
-        }
-        
-        .menu-item {
-            padding: 12px 20px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-            display: flex;
-            align-items: center;
-        }
-        
-        .menu-item:hover {
-            background-color: var(--primary-light);
-            color: var(--primary-dark);
-        }
-        
-        .menu-item.active {
-            background-color: var(--primary-light);
-            color: var(--primary-dark);
-            border-left: 4px solid var(--primary);
-        }
-        
-        .menu-item i {
-            margin-right: 10px;
-            font-size: 18px;
-        }
-        
-        .card {
-            background-color: var(--white);
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            margin-bottom: 20px;
-        }
-        
-        .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid var(--gray);
-        }
-        
-        .card-title {
-            font-size: 18px;
-            font-weight: bold;
-        }
-        
-        .btn {
-            padding: 8px 16px;
-            border-radius: 4px;
-            border: none;
-            cursor: pointer;
-            font-size: 14px;
-            transition: all 0.3s;
-        }
-        
-        .btn-primary {
-            background-color: var(--primary);
-            color: var(--white);
-        }
-        
-        .btn-primary:hover {
-            background-color: var(--primary-dark);
-        }
-        
-        .btn-outline {
-            background-color: transparent;
-            border: 1px solid var(--primary);
-            color: var(--primary);
-        }
-        
-        .btn-outline:hover {
-            background-color: var(--primary-light);
-        }
-        
-        .form-group {
-            margin-bottom: 15px;
-        }
-        
-        .form-label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: 500;
-        }
-        
-        .form-control {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid var(--gray);
-            border-radius: 4px;
-            font-size: 14px;
-        }
-        
-        .form-control:focus {
-            outline: none;
-            border-color: var(--primary);
-        }
-        
-        .table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        
-        .table th, .table td {
-            padding: 12px 15px;
-            text-align: left;
-            border-bottom: 1px solid var(--gray);
-        }
-        
-        .table th {
-            background-color: var(--primary-light);
-            color: var(--text);
-            font-weight: 600;
-        }
-        
-        .table tr:hover {
-            background-color: var(--gray-light);
-        }
-        
-        .action-btn {
-            background-color: transparent;
-            border: none;
-            cursor: pointer;
-            font-size: 16px;
-            margin-right: 5px;
-            color: var(--primary-dark);
-        }
-        
-        .badge {
-            padding: 4px 8px;
-            border-radius: 12px;
-            font-size: 12px;
-            font-weight: 500;
-        }
-        
-        .badge-success {
-            background-color: #D1E7DD;
-            color: #0A3622;
-        }
-        
-        .badge-warning {
-            background-color: #FFF3CD;
-            color: #856404;
-        }
-        
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-        }
-        
-        .modal-content {
-            background-color: var(--white);
-            margin: 10% auto;
-            padding: 20px;
-            border-radius: 8px;
-            width: 500px;
-            max-width: 90%;
-        }
-        
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid var(--gray);
-        }
-        
-        .close {
-            font-size: 24px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-        
-        .tabs {
-            display: flex;
-            margin-bottom: 20px;
-            border-bottom: 1px solid var(--gray);
-        }
-        
-        .tab {
-            padding: 10px 20px;
-            cursor: pointer;
-            border-bottom: 2px solid transparent;
-            transition: all 0.3s;
-        }
-        
-        .tab.active {
-            border-bottom-color: var(--primary);
-            color: var(--primary-dark);
-        }
-        
-        .tab-content {
-            display: none;
-        }
-        
-        .tab-content.active {
-            display: block;
-        }
-        
-        .status-indicator {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            display: inline-block;
-            margin-right: 5px;
-        }
-        
-        .status-online {
-            background-color: #28a745;
-        }
-        
-        .status-offline {
-            background-color: #dc3545;
-        }
-        
-        .user-info {
-            display: flex;
-            align-items: center;
-        }
-        
-        .user-avatar {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            background-color: var(--primary-light);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-right: 10px;
-            color: var(--primary-dark);
-            font-weight: bold;
-        }
-        
-        @media screen and (max-width: 768px) {
-            .container {
-                flex-direction: column;
-            }
-            
-            .sidebar {
-                width: 100%;
-                border-right: none;
-                border-bottom: 1px solid var(--gray);
-            }
-            
-            .menu {
-                display: flex;
-                overflow-x: auto;
-                padding: 0;
-            }
-            
-            .menu-item {
-                padding: 10px 15px;
-            }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <title>Evdeki Depo Takip Sistemi</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f9f9f9;
+      padding: 30px;
+      text-align: center;
+    }
+    .machine {
+      background: #fff;
+      border: 2px solid #ccc;
+      border-radius: 10px;
+      padding: 20px;
+      margin: 20px auto;
+      width: 80%;
+      max-width: 700px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    .machine h2 {
+      margin-top: 0;
+    }
+    .part {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top: 1px solid #eee;
+      padding: 10px 0;
+    }
+    .part img {
+      width: 50px;
+      height: 50px;
+      object-fit: cover;
+      border-radius: 5px;
+      margin-right: 15px;
+    }
+    .part-info {
+      flex: 1;
+      text-align: left;
+    }
+    .part-info p {
+      margin: 3px 0;
+    }
+    .critical {
+      color: red;
+      font-weight: bold;
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <!-- Sidebar -->
-        <div class="sidebar">
-            <div class="header">
-                <div class="logo">Mataş Depo</div>
-            </div>
-            <ul class="menu">
-                <li class="menu-item active">
-                    <i>📊</i> Ana Sayfa
-                </li>
-                <li class="menu-item">
-                    <i>🔧</i> Makineler
-                </li>
-                <li class="menu-item">
-                    <i>📦</i> Ürünler
-                </li>
-                <li class="menu-item">
-                    <i>⬆️</i> Stok Girişi
-                </li>
-                <li class="menu-item">
-                    <i>⬇️</i> Stok Çıkışı
-                </li>
-                <li class="menu-item">
-                    <i>📝</i> Raporlar
-                </li>
-                <li class="menu-item">
-                    <i>👥</i> Kullanıcılar
-                </li>
-                <li class="menu-item">
-                    <i>⚙️</i> Ayarlar
-                </li>
-            </ul>
-            <div style="padding: 20px; text-align: center;">
-                <div class="status-indicator status-online"></div> Çevrimiçi
-            </div>
-        </div>
-        
-        <!-- Main Content -->
-        <div class="main-content">
-            <div class="card">
-                <div class="card-header">
-                    <div class="card-title">Hoş Geldiniz</div>
-                    <div class="user-info">
-                        <div class="user-avatar">AK</div>
-                        <span>Admin Kullanıcı</span>
-                    </div>
-                </div>
-                <div>
-                    <p>Mataş Depo Takip Sistemine hoş geldiniz. Soldaki menüden işlem yapmak istediğiniz bölümü seçebilirsiniz.</p>
-                </div>
-            </div>
-            
-            <div class="card">
-                <div class="card-header">
-                    <div class="card-title">Stok Durumu Özeti</div>
-                    <button class="btn btn-outline" onclick="showTab('tab1')">Yenile</button>
-                </div>
-                <div class="tabs">
-                    <div class="tab active" onclick="showTab('tab1')">Kritik Stoklar</div>
-                    <div class="tab" onclick="showTab('tab2')">Son Hareketler</div>
-                </div>
-                <div id="tab1" class="tab-content active">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Ürün Kodu</th>
-                                <th>Ürün Adı</th>
-                                <th>Mevcut Stok</th>
-                                <th>Durum</th>
-                                <th>İşlemler</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>PRD001</td>
-                                <td>Motor Rulmanı</td>
-                                <td>5</td>
-                                <td><span class="badge badge-warning">Kritik</span></td>
-                                <td>
-                                    <button class="action-btn" onclick="openModal('stockEntryModal')">➕</button>
-                                    <button class="action-btn" onclick="openModal('stockExitModal')">➖</button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>PRD002</td>
-                                <td>Hidrolik Hortum</td>
-                                <td>8</td>
-                                <td><span class="badge badge-warning">Kritik</span></td>
-                                <td>
-                                    <button class="action-btn" onclick="openModal('stockEntryModal')">➕</button>
-                                    <button class="action-btn" onclick="openModal('stockExitModal')">➖</button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>PRD003</td>
-                                <td>Kızak Yağı</td>
-                                <td>3</td>
-                                <td><span class="badge badge-warning">Kritik</span></td>
-                                <td>
-                                    <button class="action-btn" onclick="openModal('stockEntryModal')">➕</button>
-                                    <button class="action-btn" onclick="openModal('stockExitModal')">➖</button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <div id="tab2" class="tab-content">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Tarih</th>
-                                <th>İşlem</th>
-                                <th>Ürün</th>
-                                <th>Miktar</th>
-                                <th>Kullanıcı</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>21.04.2025 10:15</td>
-                                <td>Stok Girişi</td>
-                                <td>Kesici Uç</td>
-                                <td>20</td>
-                                <td>Ali Yılmaz</td>
-                            </tr>
-                            <tr>
-                                <td>21.04.2025 09:30</td>
-                                <td>Stok Çıkışı</td>
-                                <td>Motor Rulmanı</td>
-                                <td>2</td>
-                                <td>Mehmet Demir</td>
-                            </tr>
-                            <tr>
-                                <td>20.04.2025 16:45</td>
-                                <td>Stok Girişi</td>
-                                <td>Hidrolik Yağ</td>
-                                <td>10</td>
-                                <td>Ayşe Kara</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            
-            <div class="card">
-                <div class="card-header">
-                    <div class="card-title">Hızlı İşlemler</div>
-                </div>
-                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-                    <button class="btn btn-primary" onclick="openModal('machineModal')">Makine Ekle</button>
-                    <button class="btn btn-primary" onclick="openModal('productModal')">Ürün Ekle</button>
-                    <button class="btn btn-primary" onclick="openModal('stockEntryModal')">Stok Girişi</button>
-                    <button class="btn btn-primary" onclick="openModal('stockExitModal')">Stok Çıkışı</button>
-                    <button class="btn btn-outline">Rapor Oluştur</button>
-                </div>
-            </div>
-        </div>
+
+  <h1>Evdeki Depo Takip Sistemi</h1>
+
+  <div class="machine">
+    <h2>Makine 1</h2>
+
+    <div class="part">
+      <img src="https://via.placeholder.com/50" alt="Motor">
+      <div class="part-info">
+        <strong>Motor</strong>
+        <p>Giren: 5 | Çıkan: 4</p>
+        <p>Açıklama: Yüksek devirli motor.</p>
+        <p class="critical">⚠ Kritik Seviye: Stok 1</p>
+      </div>
     </div>
-    
-    <!-- Makine Ekleme Modal -->
-    <div id="machineModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Yeni Makine Ekle</h3>
-                <span class="close" onclick="closeModal('machineModal')">&times;</span>
-            </div>
-            <form>
-                <div class="form-group">
-                    <label class="form-label">Makine Kodu</label>
-                    <input type="text" class="form-control" placeholder="Makine kodunu girin">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Makine Adı</label>
-                    <input type="text" class="form-control" placeholder="Makine adını girin">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Makine Türü</label>
-                    <select class="form-control">
-                        <option>Torna</option>
-                        <option>Freze</option>
-                        <option>CNC</option>
-                        <option>Pres</option>
-                        <option>Diğer</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Açıklama</label>
-                    <textarea class="form-control" rows="3" placeholder="Makine hakkında açıklama girin"></textarea>
-                </div>
-                <div style="display: flex; justify-content: flex-end; gap: 10px;">
-                    <button type="button" class="btn btn-outline" onclick="closeModal('machineModal')">İptal</button>
-                    <button type="button" class="btn btn-primary">Kaydet</button>
-                </div>
-            </form>
-        </div>
+
+    <div class="part">
+      <img src="https://via.placeholder.com/50" alt="Kayış">
+      <div class="part-info">
+        <strong>Kayış</strong>
+        <p>Giren: 20 | Çıkan: 5</p>
+        <p>Açıklama: V tipi kayış</p>
+        <p>Stok Durumu: 15</p>
+      </div>
     </div>
-    
-    <!-- Ürün Ekleme Modal -->
-    <div id="productModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Yeni Ürün Ekle</h3>
-                <span class="close" onclick="closeModal('productModal')">&times;</span>
-            </div>
-            <form>
-                <div class="form-group">
-                    <label class="form-label">Ürün Kodu</label>
-                    <input type="text" class="form-control" placeholder="Ürün kodunu girin">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Ürün Adı</label>
-                    <input type="text" class="form-control" placeholder="Ürün adını girin">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Kategori</label>
-                    <select class="form-control">
-                        <option>Yedek Parça</option>
-                        <option>Hammadde</option>
-                        <option>Sarf Malzeme</option>
-                        <option>Diğer</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">İlişkili Makine</label>
-                    <select class="form-control">
-                        <option>Seçiniz...</option>
-                        <option>Torna Makinesi 1</option>
-                        <option>CNC Freze 2</option>
-                        <option>Hidrolik Pres 3</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Kritik Stok Seviyesi</label>
-                    <input type="number" class="form-control" placeholder="Kritik stok seviyesini girin">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Açıklama</label>
-                    <textarea class="form-control" rows="3" placeholder="Ürün hakkında açıklama girin"></textarea>
-                </div>
-                <div style="display: flex; justify-content: flex-end; gap: 10px;">
-                    <button type="button" class="btn btn-outline" onclick="closeModal('productModal')">İptal</button>
-                    <button type="button" class="btn btn-primary">Kaydet</button>
-                </div>
-            </form>
-        </div>
-    </div>
-    
-    <!-- Stok Giriş Modal -->
-    <div id="stockEntryModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Stok Girişi</h3>
-                <span class="close" onclick="closeModal('stockEntryModal')">&times;</span>
-            </div>
-            <form>
-                <div class="form-group">
-                    <label class="form-label">Ürün</label>
-                    <select class="form-control">
-                        <option>Seçiniz...</option>
-                        <option>Motor Rulmanı</option>
-                        <option>Hidrolik Hortum</option>
-                        <option>Kızak Yağı</option>
-                        <option>Kesici Uç</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Miktar</label>
-                    <input type="number" class="form-control" placeholder="Giriş miktarını girin">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Tarih</label>
-                    <input type="date" class="form-control" value="2025-04-21">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Açıklama</label>
-                    <textarea class="form-control" rows="3" placeholder="Giriş hakkında açıklama girin"></textarea>
-                </div>
-                <div style="display: flex; justify-content: flex-end; gap: 10px;">
-                    <button type="button" class="btn btn-outline" onclick="closeModal('stockEntryModal')">İptal</button>
-                    <button type="button" class="btn btn-primary">Kaydet</button>
-                </div>
-            </form>
-        </div>
-    </div>
-    
-    <!-- Stok Çıkış Modal -->
-    <div id="stockExitModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Stok Çıkışı</h3>
-                <span class="close" onclick="closeModal('stockExitModal')">&times;</span>
-            </div>
-            <form>
-                <div class="form-group">
-                    <label class="form-label">Makine</label>
-                    <select class="form-control" id="machineSelect" onchange="updateProductList()">
-                        <option>Seçiniz...</option>
-                        <option>Torna Makinesi 1</option>
-                        <option>CNC Freze 2</option>
-                        <option>Hidrolik Pres 3</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Ürün</label>
-                    <select class="form-control" id="productSelect">
-                        <option>Önce makine seçiniz</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Miktar</label>
-                    <input type="number" class="form-control" placeholder="Çıkış miktarını girin">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Tarih</label>
-                    <input type="date" class="form-control" value="2025-04-21">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Açıklama</label>
-                    <textarea class="form-control" rows="3" placeholder="Çıkış hakkında açıklama girin"></textarea>
-                </div>
-                <div style="display: flex; justify-content: flex-end; gap: 10px;">
-                    <button type="button" class="btn btn-outline" onclick="closeModal('stockExitModal')">İptal</button>
-                    <button type="button" class="btn btn-primary">Kaydet</button>
-                </div>
-            </form>
-        </div>
-    </div>
-    
-    <script>
-        // Tab değiştirme fonksiyonu
-        function showTab(tabId) {
-            const tabs = document.querySelectorAll('.tab');
-            const tabContents = document.querySelectorAll('.tab-content');
-            
-            tabs.forEach(tab => tab.classList.remove('active'));
-            tabContents.forEach(content => content.classList.remove('active'));
-            
-            document.querySelector(`.tab[onclick="showTab('${tabId}')"]`).classList.add('active');
-            document.getElementById(tabId).classList.add('active');
-        }
-        
-        // Modal açma fonksiyonu
-        function openModal(modalId) {
-            document.getElementById(modalId).style.display = 'block';
-        }
-        
-        // Modal kapatma fonksiyonu
-        function closeModal(modalId) {
-            document.getElementById(modalId).style.display = 'none';
-        }
-        
-        // Makineye göre ürün listesini güncelle
-        function updateProductList() {
-            const machineSelect = document.getElementById('machineSelect');
-            const productSelect = document.getElementById('productSelect');
-            
-            // Seçilen makineye göre ürün seçeneklerini güncelle
-            productSelect.innerHTML = '';
-            
-            if (machineSelect.value === 'Torna Makinesi 1') {
-                addOption(productSelect, 'Motor Rulmanı');
-                addOption(productSelect, 'Kesici Uç');
-                addOption(productSelect, 'Soğutma Sıvısı');
-            } else if (machineSelect.value === 'CNC Freze 2') {
-                addOption(productSelect, 'Kesici Uç');
-                addOption(productSelect, 'Freze Bıçağı');
-                addOption(productSelect, 'Kızak Yağı');
-            } else if (machineSelect.value === 'Hidrolik Pres 3') {
-                addOption(productSelect, 'Hidrolik Yağ');
-                addOption(productSelect, 'Hidrolik Hortum');
-                addOption(productSelect, 'Conta Seti');
-            } else {
-                addOption(productSelect, 'Önce makine seçiniz');
-            }
-        }
-        
-        // Select'e option ekleme yardımcı fonksiyonu
-        function addOption(selectElement, text, value = text) {
-            const option = document.createElement('option');
-            option.text = text;
-            option.value = value;
-            selectElement.add(option);
-        }
-        
-        // Pencere kapandığında modal'ları kapatma
-        window.onclick = function(event) {
-            const modals = document.getElementsByClassName('modal');
-            for (let i = 0; i < modals.length; i++) {
-                if (event.target === modals[i]) {
-                    modals[i].style.display = 'none';
-                }
-            }
-        };
-        
-        // Çevrimdışı/çevrimiçi durumunu kontrol et
-        window.addEventListener('online', updateOnlineStatus);
-        window.addEventListener('offline', updateOnlineStatus);
-        
-        function updateOnlineStatus() {
-            const statusIndicator = document.querySelector('.status-indicator');
-            const statusText = statusIndicator.nextElementSibling;
-            
-            if (navigator.onLine) {
-                statusIndicator.classList.remove('status-offline');
-                statusIndicator.classList.add('status-online');
-                statusText.textContent = ' Çevrimiçi';
-            } else {
-                statusIndicator.classList.remove('status-online');
-                statusIndicator.classList.add('status-offline');
-                statusText.textContent = ' Çevrimdışı';
-            }
-        }
-        
-        // Sayfa yüklendiğinde çevrimiçi durumunu güncelle
-        updateOnlineStatus();
-    </script>
+
+  </div>
+
 </body>
 </html>
